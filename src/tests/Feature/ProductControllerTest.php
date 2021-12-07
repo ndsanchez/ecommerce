@@ -6,12 +6,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Product;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class ProductControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithoutMiddleware;
     /**
-     * A basic feature test example.
+     * Test index method
      *
      * @return void
      */
@@ -23,5 +24,24 @@ class ProductControllerTest extends TestCase
         $response->assertSuccessful();
         $response->assertHeader('content-type', 'application/json');
         $response->assertJsonCount(5);
+    }
+
+    /**
+     * test store method
+     * 
+     * @return void
+     * 
+    */
+    public function test_store()
+    {
+        $product = [
+            'name' => 'Rice 1 kg',
+            'price' => 3000
+        ];
+        $response = $this->postJson('/api/products', $product);
+
+        $response->assertStatus(200);
+        $response->assertHeader('content-type', 'application/json');
+        $response->assertJson($product);
     }
 }

@@ -28,7 +28,9 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        //
+        $product = Product::create($request->all());
+
+        return response()->json($product, 200);
     }
 
     /**
