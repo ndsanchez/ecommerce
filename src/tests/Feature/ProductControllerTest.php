@@ -61,4 +61,25 @@ class ProductControllerTest extends TestCase
         $response->assertHeader('content-type', 'application/json');
         $response->assertJson($this->product);
     }
+
+    /**
+     * test update method
+     * 
+     * @return void
+     */
+    public function test_update()
+    {
+        $product = Product::factory()->create();
+        $newProduct = [
+            'name' => 'Bread',
+            'price' => 2000
+        ];
+
+        $response = $this->putJson("api/products/{$product->getKey()}", $newProduct);
+
+        $response->assertSuccessful();
+        $response->assertHeader('content-type', 'application/json');
+        $this->assertDatabaseHas('products', $newProduct);
+        $response->assertJson($newProduct);
+    }
 }
