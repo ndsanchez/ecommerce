@@ -6,11 +6,16 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Product;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class ProductControllerTest extends TestCase
 {
-    use RefreshDatabase, WithoutMiddleware;
+    use RefreshDatabase;
+
+    public $product = [
+        'name' => 'Rice 1 kg',
+        'price' => 3000
+    ];
+
     /**
      * Test index method
      *
@@ -34,14 +39,26 @@ class ProductControllerTest extends TestCase
     */
     public function test_store()
     {
-        $product = [
-            'name' => 'Rice 1 kg',
-            'price' => 3000
-        ];
-        $response = $this->postJson('/api/products', $product);
+        
+        $response = $this->postJson('/api/products', $this->product);
 
         $response->assertStatus(200);
         $response->assertHeader('content-type', 'application/json');
-        $response->assertJson($product);
+        $response->assertJson($this->product);
+    }
+
+    /**
+     * test show method
+     * 
+     * @return void
+     */
+    public function test_show()
+    {
+        Product::create($this->product);
+        $response = $this->getJson('api/products/1');
+
+        $response->assertSuccessful();
+        $response->assertHeader('content-type', 'application/json');
+        $response->assertJson($this->product);
     }
 }
