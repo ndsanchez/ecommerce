@@ -54,8 +54,8 @@ class ProductControllerTest extends TestCase
      */
     public function test_show()
     {
-        Product::create($this->product);
-        $response = $this->getJson('api/products/1');
+        $product = Product::create($this->product);
+        $response = $this->getJson("api/products/{$product->getKey()}");
 
         $response->assertSuccessful();
         $response->assertHeader('content-type', 'application/json');
