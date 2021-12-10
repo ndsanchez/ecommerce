@@ -15,10 +15,7 @@ use App\Http\Controllers\ProductController;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
-// Route::get('products', [ProductController::class, 'index'])->name('storeProduct');
-Route::resource('products', ProductController::class);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::resource('products', ProductController::class);
+});
 

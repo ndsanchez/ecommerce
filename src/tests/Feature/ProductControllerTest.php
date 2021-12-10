@@ -6,6 +6,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Product;
+use App\Models\User;
+use Laravel\Sanctum\Sanctum;
 
 class ProductControllerTest extends TestCase
 {
@@ -23,6 +25,11 @@ class ProductControllerTest extends TestCase
      */
     public function test_index()
     {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        );
+
         Product::factory()->count(5)->create();
 
         $response = $this->getJson('/api/products');
@@ -39,7 +46,11 @@ class ProductControllerTest extends TestCase
     */
     public function test_store()
     {
-        
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        );
+
         $response = $this->postJson('/api/products', $this->product);
 
         $response->assertStatus(200);
@@ -54,6 +65,11 @@ class ProductControllerTest extends TestCase
      */
     public function test_show()
     {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        );
+
         $product = Product::create($this->product);
         $response = $this->getJson("api/products/{$product->getKey()}");
 
@@ -69,6 +85,11 @@ class ProductControllerTest extends TestCase
      */
     public function test_update()
     {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        );
+
         $product = Product::factory()->create();
         $newProduct = [
             'name' => 'Bread',
@@ -90,6 +111,11 @@ class ProductControllerTest extends TestCase
      */
     public function test_destroy()
     {
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        );
+
         $product = Product::factory()->create();
 
         $response = $this->deleteJson("api/products/{$product->getKey()}");
