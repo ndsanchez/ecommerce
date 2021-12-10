@@ -82,4 +82,19 @@ class ProductControllerTest extends TestCase
         $this->assertDatabaseHas('products', $newProduct);
         $response->assertJson($newProduct);
     }
+
+    /**
+     * test destroy method
+     * 
+     * @return void
+     */
+    public function test_destroy()
+    {
+        $product = Product::factory()->create();
+
+        $response = $this->deleteJson("api/products/{$product->getKey()}");
+        $response->assertSuccessful(200);
+        $response->assertHeader('content-type', 'application/json');
+        $this->assertDeleted($product);
+    }
 }
